@@ -21,19 +21,24 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
 
 public class ElasticSearchConsumer {
 
+    private static InputStream inputStream;
+
+    static String hostname="";
+    static String username="";
+    static String password="";
     public static RestHighLevelClient createClient(){
 
 //        https://mbar3ru5w7:if4xfio8q7@twitterkafka-5346966143.ap-southeast-2.bonsaisearch.net:443
-        String hostname="twitterkafka-5346966143.ap-southeast-2.bonsaisearch.net";
-        String username="mbar3ru5w7";
-        String password="if4xfio8q7";
+
 
         final CredentialsProvider credentialsProvider=new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY,new UsernamePasswordCredentials(username,password));
@@ -54,10 +59,10 @@ public class ElasticSearchConsumer {
     public static void main(String[] args) throws IOException {
 
         Logger logger= LoggerFactory.getLogger(ElasticSearchConsumer.class.getName());
+
+        readConfigValues();
+
         RestHighLevelClient client=createClient();
-
-
-
 
         KafkaConsumer<String,String>consumer=createConsumer("twitter_tweets");
 
@@ -82,6 +87,26 @@ public class ElasticSearchConsumer {
         }
 //        client.close();
 
+    }
+
+    private static void readConfigValues() throws FileNotFoundException {
+        Properties prop = new Properties();
+        String propFileName = "config.properties";
+
+        inputStream = ElasticSearchConsumer.class.getClassLoader().getResourceAsStream(propFileName);
+
+        if (inputStream != null) {
+            try {
+                prop.load(inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+        }
+        hostname=prop.getProperty("hostname");
+        username=prop.getProperty("username");
+        password=prop.getProperty("password");
     }
 
     public static KafkaConsumer<String ,String> createConsumer(String topic){
