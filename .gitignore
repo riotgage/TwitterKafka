@@ -1,3 +1,4 @@
 # Project exclude paths
 /target/
-/src/main/resources/
+/twitter-kafka/src/main/resources
+/.idea

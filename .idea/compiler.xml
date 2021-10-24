@@ -6,7 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="TwitterKafka" />
+        <module name="Kafka-Consumer-ElasticSearch" />
+        <module name="twitter-kafka" />
+        <module name="kafka-basics" />
       </profile>
     </annotationProcessing>
   </component>

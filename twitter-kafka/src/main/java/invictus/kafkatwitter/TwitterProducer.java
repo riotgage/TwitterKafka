@@ -1,4 +1,4 @@
-package com.invictus.kafkatwitter;
+package invictus.kafkatwitter;
 
 import com.google.common.collect.Lists;
 import com.twitter.hbc.ClientBuilder;
@@ -124,7 +124,7 @@ public class TwitterProducer {
         Hosts hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
         StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
 // Optional: set up some followings and track terms
-        List<String> terms = Lists.newArrayList("India");
+        List<String> terms = Lists.newArrayList("India","Pak","world cup");
         hosebirdEndpoint.trackTerms(terms);
 
         // These secrets should be read from a config file
@@ -155,6 +155,9 @@ public class TwitterProducer {
         properties.setProperty(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION,"5");
         // Kafka 2.0 >=1.1 so we can keep this as 5. Use 1 otherwise
 
+        properties.setProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG,"snappy");
+        properties.setProperty(ProducerConfig.LINGER_MS_CONFIG,"20");
+        properties.setProperty(ProducerConfig.BATCH_SIZE_CONFIG,Integer.toString(32*1024));
         // Create Producer
 
         return new KafkaProducer<String, String>(properties);
