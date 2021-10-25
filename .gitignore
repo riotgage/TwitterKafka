@@ -1,4 +1,4 @@
 # Project exclude paths
-/target/
-/twitter-kafka/src/main/resources
+**/target/
 /.idea
+*.properties
